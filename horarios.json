@@ -1,0 +1,284 @@
+{
+  "AMIII": {
+    "t1": [
+      {
+        "dia": "terca-feira",
+        "horario": "09:00-11:00"
+      },
+      {
+        "dia": "quinta-feira",
+        "horario": "09:00-11:00"
+      }
+    ],
+    "t2": [
+      {
+        "dia": "terca-feira",
+        "horario": "11:00-13:00"
+      },
+      {
+        "dia": "quinta-feira",
+        "horario": "11:00-13:00"
+      }
+    ],
+    "t3": [
+      {
+        "dia": "terca-feira",
+        "horario": "14:00-16:00"
+      },
+      {
+        "dia": "quinta-feira",
+        "horario": "14:00-16:00"
+      }
+    ]
+  },
+  "POO": {
+    "t1": [
+      {
+        "dia": "segunda-feira",
+        "horario": "11:00-13:00"
+      },
+      {
+        "dia": "quinta-feira",
+        "horario": "16:00-18:00"
+      }
+    ],
+    "t2": [
+      {
+        "dia": "segunda-feira",
+        "horario": "9:00-11:00"
+      },
+      {
+        "dia": "quinta-feira",
+        "horario": "18:00-20:00"
+      }
+    ],
+    "t3": [
+      {
+        "dia": "terca-feira",
+        "horario": "11:00-13:00"
+      },
+      {
+        "dia": "quinta-feira",
+        "horario": "14:00-16:00"
+      }
+    ],
+    "t4": [
+      {
+        "dia": "terca-feira",
+        "horario": "14:00-16:00"
+      },
+      {
+        "dia": "quinta-feira",
+        "horario": "16:00-18:00"
+      }
+    ],
+    "t5": [
+      {
+        "dia": "terca-feira",
+        "horario": "18:00-20:00"
+      },
+      {
+        "dia": "quinta-feira",
+        "horario": "18:00-20:00"
+      }
+    ],
+    "t6": [
+      {
+        "dia": "segunda-feira",
+        "horario": "11:00-13:00"
+      },
+      {
+        "dia": "quarta-feira",
+        "horario": "09:00-11:00"
+      }
+    ],
+    "t7": [
+      {
+        "dia": "quarta-feira",
+        "horario": "11:00-13:00"
+      },
+      {
+        "dia": "sexta-feira",
+        "horario": "09:00-11:00"
+      }
+    ],
+    "t8": [
+      {
+        "dia": "segunda-feira",
+        "horario": "09:00-11:00"
+      },
+      {
+        "dia": "quinta-feira",
+        "horario": "09:00-11:00"
+      }
+    ]
+  },
+  "SO": {
+    "t1": [
+      {
+        "dia": "segunda-feira",
+        "horario": "18:00-20:00"
+      }
+    ],
+    "t2": [
+      {
+        "dia": "sexta-feira",
+        "horario": "16:00-18:00"
+      }
+    ],
+    "t3": [
+      {
+        "dia": "sexta-feira",
+        "horario": "14:00-16:00"
+      }
+    ],
+    "t4": [
+      {
+        "dia": "segunda-feira",
+        "horario": "18:00-20:00"
+      }
+    ],
+    "t5": [
+      {
+        "dia": "quarta-feira",
+        "horario": "09:00-11:00"
+      }
+    ],
+    "t6": [
+      {
+        "dia": "terca-feira",
+        "horario": "09:00-11:00"
+      }
+    ],
+    "t7": [
+      {
+        "dia": "terca-feira",
+        "horario": "11:00-13:00"
+      }
+    ],
+    "t8": [
+      {
+        "dia": "terca-feira",
+        "horario": "18:00-20:00"
+      }
+    ],
+    "t9": [
+      {
+        "dia": "terca-feira",
+        "horario": "18:00-20:00"
+      }
+    ],
+    "t10": [
+      {
+        "dia": "quarta-feira",
+        "horario": "09:00-11:00"
+      }
+    ],
+    "t11": [
+      {
+        "dia": "quarta-feira",
+        "horario": "11:00-13:00"
+      }
+    ]
+  },
+  "TI": {
+    "t1": [
+      {
+        "dia": "terca-feira",
+        "horario": "11:00-13:00"
+      }
+    ],
+    "t2": [
+      {
+        "dia": "sexta-feira",
+        "horario": "16:00-18:00"
+      }
+    ],
+    "t3": [
+      {
+        "dia": "terca-feira",
+        "horario": "14:00-16:00"
+      }
+    ],
+    "t4": [
+      {
+        "dia": "terca-feira",
+        "horario": "18:00-20:00"
+      }
+    ],
+    "t5": [
+      {
+        "dia": "sexta-feira",
+        "horario": "14:00-16:00"
+      }
+    ],
+    "t6": [
+      {
+        "dia": "segunda-feira",
+        "horario": "18:00-20:00"
+      }
+    ],
+    "t7": [
+      {
+        "dia": "sexta-feira",
+        "horario": "09:00-11:00"
+      }
+    ],
+    "t8": [
+      {
+        "dia": "segunda-feira",
+        "horario": "16:00-18:00"
+      }
+    ]
+  },
+  "TC": {
+    "t1": [
+      {
+        "dia": "terca-feira",
+        "horario": "09:00-11:00"
+      }
+    ],
+    "t2": [
+      {
+        "dia": "segunda-feira",
+        "horario": "11:00-13:00"
+      }
+    ],
+    "t3": [
+      {
+        "dia": "quinta-feira",
+        "horario": "16:00-18:00"
+      }
+    ],
+    "t4": [
+      {
+        "dia": "quinta-feira",
+        "horario": "14:00-16:00"
+      }
+    ],
+    "t5": [
+      {
+        "dia": "segunda-feira",
+        "horario": "16:00-18:00"
+      }
+    ],
+    "t6": [
+      {
+        "dia": "quinta-feira",
+        "horario": "18:00-20:00"
+      }
+    ],
+    "t7": [
+      {
+        "dia": "sexta-feira",
+        "horario": "14:00-16:00"
+      }
+    ],
+    "t8": [
+      {
+        "dia": "sexta-feira",
+        "horario": "16:00-18:00"
+      }
+    ]
+  }
+}
