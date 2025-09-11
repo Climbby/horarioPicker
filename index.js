@@ -9,9 +9,9 @@ let scheduleData;
     scheduleData = await response.json();
   } catch (error) {
     console.error("Falha no carregamento dos dados:", error);
-    // Opcional: Mostrar mensagem de erro na UI
+    // Show error message in UI
     document.getElementById("disciplinesGrid").innerHTML =
-      '<div class="error">Erro ao carregar horários. Verifique o arquivo horarios.json.</div>';
+      '<div class="error" style="padding: 20px; text-align: center; color: #e74c3c; font-weight: bold;">Erro ao carregar horários. Verifique o arquivo horarios.json.</div>';
   }
 })();
 
@@ -32,18 +32,28 @@ const timeSlots = [
 const selectedClasses = {};
 
 async function initializePage() {
-  // Aguarda os dados serem carregados
+  // Wait for data to load
   while (!scheduleData) {
-    await new Promise((resolve) => setTimeout(resolve, 100)); // Polling simples (pode ser otimizado)
+    await new Promise((resolve) => setTimeout(resolve, 100));
   }
 
   if (!scheduleData || Object.keys(scheduleData).length === 0) {
     console.error("Nenhum dado de horários encontrado.");
+    document.getElementById("disciplinesGrid").innerHTML =
+      '<div class="error" style="padding: 20px; text-align: center; color: #e74c3c; font-weight: bold;">Nenhum dado de horários encontrado.</div>';
     return;
   }
 
   createDisciplineSelectors();
   createScheduleGrid();
+
+  // Add event listeners to buttons
+  document
+    .getElementById("selectAllBtn")
+    .addEventListener("click", selectAllTurmas);
+  document
+    .getElementById("clearAllBtn")
+    .addEventListener("click", clearAllTurmas);
 }
 
 function createDisciplineSelectors() {
@@ -146,12 +156,18 @@ function createScheduleGrid() {
   cornerCell.textContent = "Horário";
   grid.appendChild(cornerCell);
 
-  // Day headers
+  // Day headers (with full name for tooltip)
   days.forEach((day) => {
     const dayCell = document.createElement("div");
     dayCell.className = "schedule-header";
-    dayCell.textContent =
+
+    // Create span for full day name (hidden on mobile)
+    const daySpan = document.createElement("span");
+    daySpan.textContent =
       day.charAt(0).toUpperCase() + day.slice(1).replace("-feira", "");
+
+    dayCell.appendChild(daySpan);
+    dayCell.title = day.charAt(0).toUpperCase() + day.slice(1);
     grid.appendChild(dayCell);
   });
 
@@ -197,7 +213,14 @@ function updateSchedule() {
           if (cell) {
             const classBlock = document.createElement("div");
             classBlock.className = "class-block";
-            classBlock.textContent = `${discipline} - ${turma.toUpperCase()}`;
+
+            // Use abbreviated text for mobile
+            const disciplineAbbr =
+              discipline.length > 12
+                ? discipline.substring(0, 10) + "..."
+                : discipline;
+            classBlock.textContent = `${disciplineAbbr} - ${turma.toUpperCase()}`;
+            classBlock.title = `${discipline} - ${turma.toUpperCase()}`;
 
             // Check for conflicts
             if (occupiedSlots[cellId]) {
@@ -239,7 +262,6 @@ function updateConflictStatus(hasConflicts) {
   }
 }
 
-// Add these functions to handle the select all and clear all actions
 function selectAllTurmas() {
   // Clear current selections
   for (const discipline in selectedClasses) {
@@ -286,17 +308,4 @@ function clearAllTurmas() {
 // Initialize the page when DOM is loaded
 document.addEventListener("DOMContentLoaded", async () => {
   await initializePage();
-
-  setTimeout(() => {
-    const selectAllBtn = document.getElementById("selectAllBtn");
-    const clearAllBtn = document.getElementById("clearAllBtn");
-
-    if (selectAllBtn) {
-      selectAllBtn.addEventListener("click", selectAllTurmas);
-    }
-
-    if (clearAllBtn) {
-      clearAllBtn.addEventListener("click", clearAllTurmas);
-    }
-  }, 500);
 });

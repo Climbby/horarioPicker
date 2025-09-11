@@ -49,6 +49,22 @@ body {
   margin-bottom: 30px;
   overflow-x: auto;
   padding-bottom: 10px;
+  scrollbar-width: thin;
+  scrollbar-color: #3498db #f1f1f1;
+}
+
+.disciplines-grid::-webkit-scrollbar {
+  height: 8px;
+}
+
+.disciplines-grid::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.disciplines-grid::-webkit-scrollbar-thumb {
+  background: #3498db;
+  border-radius: 10px;
 }
 
 .discipline-card {
@@ -59,6 +75,7 @@ body {
   border: 2px solid transparent;
   transition: all 0.3s ease;
   flex: 0 0 auto;
+  min-width: 280px;
 }
 
 .discipline-card:hover {
@@ -155,6 +172,7 @@ body {
   padding: 25px;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
   margin-top: 30px;
+  overflow: hidden;
 }
 
 .schedule-title {
@@ -165,13 +183,21 @@ body {
   font-weight: bold;
 }
 
+.schedule-scroll-container {
+  overflow-x: auto;
+  border-radius: 10px;
+  margin: 0 -10px;
+  padding: 0 10px;
+}
+
 .schedule-grid {
   display: grid;
-  grid-template-columns: 100px repeat(5, 1fr);
+  grid-template-columns: 80px repeat(5, minmax(120px, 1fr));
   gap: 1px;
   background: #ddd;
   border-radius: 10px;
   overflow: hidden;
+  min-width: 700px;
 }
 
 .schedule-header {
@@ -180,6 +206,7 @@ body {
   padding: 15px 10px;
   text-align: center;
   font-weight: bold;
+  font-size: 0.9rem;
 }
 
 .time-slot {
@@ -189,6 +216,7 @@ body {
   font-weight: 600;
   color: #2c3e50;
   border-right: 1px solid #ddd;
+  font-size: 0.85rem;
 }
 
 .schedule-cell {
@@ -208,12 +236,13 @@ body {
   color: white;
   padding: 8px;
   border-radius: 6px;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: bold;
   text-align: center;
   margin-bottom: 5px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   transition: all 0.3s ease;
+  word-break: break-word;
 }
 
 .class-block:hover {
@@ -258,23 +287,6 @@ body {
   font-weight: bold;
 }
 
-@media (max-width: 768px) {
-  .disciplines-grid {
-    flex-direction: column;
-  }
-
-  .discipline-card {
-    min-width: 100%;
-  }
-
-  .schedule-grid {
-    font-size: 0.8rem;
-  }
-
-  .header h1 {
-    font-size: 2rem;
-  }
-}
 .button-container {
   display: flex;
   gap: 15px;
@@ -319,4 +331,213 @@ body {
 
 .clear-all:hover {
   background: linear-gradient(135deg, #c0392b, #a93226);
+}
+
+/* Mobile-specific styles */
+@media (max-width: 768px) {
+  body {
+    padding: 10px;
+  }
+
+  .container {
+    border-radius: 15px;
+  }
+
+  .header {
+    padding: 20px 15px;
+  }
+
+  .header h1 {
+    font-size: 1.8rem;
+  }
+
+  .header p {
+    font-size: 1rem;
+  }
+
+  .main-content {
+    padding: 20px 15px;
+  }
+
+  .disciplines-grid {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .discipline-card {
+    min-width: 100%;
+    padding: 15px;
+  }
+
+  .discipline-title {
+    font-size: 1.2rem;
+    padding: 8px;
+  }
+
+  .turma-buttons {
+    justify-content: center;
+  }
+
+  .button-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .control-button {
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .schedule-container {
+    padding: 15px;
+    border-radius: 12px;
+    /* Remove any overflow hidden that might interfere */
+    overflow: visible;
+  }
+
+  .schedule-title {
+    font-size: 1.5rem;
+  }
+
+  .schedule-scroll-container {
+    /* Fix the scrolling container */
+    overflow-x: auto;
+    overflow-y: visible;
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    margin: 0; /* Remove negative margins */
+    padding: 0; /* Remove padding that interferes */
+    border-radius: 10px;
+    /* Add some padding to prevent content from touching edges */
+    padding-right: 15px;
+  }
+
+  .schedule-grid {
+    /* Increase min-width to ensure full table is visible */
+    min-width: 750px; /* Increased from 600px */
+    font-size: 0.8rem;
+    /* Ensure the grid doesn't shrink */
+    flex-shrink: 0;
+  }
+
+  .schedule-header {
+    padding: 10px 5px;
+    font-size: 0.8rem;
+  }
+
+  .time-slot {
+    padding: 10px 5px;
+    font-size: 0.8rem;
+  }
+
+  .schedule-cell {
+    padding: 8px 5px;
+    min-height: 50px;
+  }
+
+  .class-block {
+    font-size: 0.75rem;
+    padding: 5px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header h1 {
+    font-size: 1.5rem;
+  }
+
+  .header p {
+    font-size: 0.9rem;
+  }
+
+  .discipline-title {
+    font-size: 1.1rem;
+  }
+
+  .turma-button {
+    padding: 8px 12px;
+    font-size: 0.8rem;
+  }
+
+  .schedule-container {
+    /* Reduce padding on very small screens */
+    padding: 10px;
+    /* Make sure container doesn't interfere with scrolling */
+    overflow: visible;
+  }
+
+  .schedule-scroll-container {
+    /* More aggressive fixes for small screens */
+    overflow-x: auto;
+    overflow-y: visible;
+    -webkit-overflow-scrolling: touch;
+    margin: 0;
+    padding: 0;
+    /* Add more right padding for very small screens */
+    padding-right: 20px;
+    border-radius: 10px;
+  }
+
+  .schedule-grid {
+    /* Even larger min-width for small screens */
+    min-width: 800px; /* Increased from 500px */
+    /* Make sure each column has enough space */
+    grid-template-columns: 80px repeat(5, minmax(140px, 1fr));
+  }
+
+  .schedule-header {
+    font-size: 0.75rem;
+    padding: 8px 3px;
+  }
+
+  .time-slot {
+    font-size: 0.75rem;
+    padding: 8px 3px;
+  }
+
+  .class-block {
+    font-size: 0.7rem;
+  }
+
+  /* Day abbreviations for very small screens */
+  .schedule-header:nth-child(2)::after {
+    content: "Seg";
+  }
+  .schedule-header:nth-child(3)::after {
+    content: "Ter";
+  }
+  .schedule-header:nth-child(4)::after {
+    content: "Qua";
+  }
+  .schedule-header:nth-child(5)::after {
+    content: "Qui";
+  }
+  .schedule-header:nth-child(6)::after {
+    content: "Sex";
+  }
+
+  .schedule-header:nth-child(2) span,
+  .schedule-header:nth-child(3) span,
+  .schedule-header:nth-child(4) span,
+  .schedule-header:nth-child(5) span,
+  .schedule-header:nth-child(6) span {
+    display: none;
+  }
+}
+
+/* Additional fix for any remaining scroll issues */
+@media (max-width: 600px) {
+  .main-content {
+    /* Ensure main content doesn't interfere */
+    overflow-x: visible;
+  }
+
+  .container {
+    /* Make sure container allows horizontal overflow */
+    overflow-x: visible;
+  }
+
+  body {
+    /* Ensure body allows horizontal scrolling */
+    overflow-x: auto;
+  }
 }
