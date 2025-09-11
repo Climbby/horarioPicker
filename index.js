@@ -1,5 +1,27 @@
 let scheduleData;
 
+// Define fixed classes that always appear on the schedule
+const fixedClasses = [
+  {
+    dia: "segunda-feira",
+    horario: "14:00-16:00",
+    name: "TC *", // You can customize this name
+    type: "fixed",
+  },
+  {
+    dia: "terca-feira",
+    horario: "16:00-18:00",
+    name: "SO *",
+    type: "fixed",
+  },
+  {
+    dia: "sexta-feira",
+    horario: "11:00-13:00",
+    name: "TI *",
+    type: "fixed",
+  },
+];
+
 (async () => {
   try {
     const response = await fetch("./horarios.json");
@@ -54,6 +76,9 @@ async function initializePage() {
   document
     .getElementById("clearAllBtn")
     .addEventListener("click", clearAllTurmas);
+
+  // Initialize schedule with fixed classes
+  updateSchedule();
 }
 
 function createDisciplineSelectors() {
@@ -199,7 +224,23 @@ function updateSchedule() {
   const occupiedSlots = {};
   let hasConflicts = false;
 
-  // Add selected classes to schedule
+  // First, add fixed classes to the schedule
+  fixedClasses.forEach((fixedClass) => {
+    const cellId = `${fixedClass.dia}-${fixedClass.horario}`;
+    const cell = document.getElementById(cellId);
+
+    if (cell) {
+      const classBlock = document.createElement("div");
+      classBlock.className = "class-block fixed-class";
+      classBlock.textContent = fixedClass.name;
+      classBlock.title = `${fixedClass.name} (Fixo)`;
+
+      cell.appendChild(classBlock);
+      occupiedSlots[cellId] = true;
+    }
+  });
+
+  // Then add selected classes to schedule
   Object.entries(selectedClasses).forEach(([discipline, turmas]) => {
     turmas.forEach((turma) => {
       // Check if the turma still exists in scheduleData
@@ -222,7 +263,7 @@ function updateSchedule() {
             classBlock.textContent = `${disciplineAbbr} - ${turma.toUpperCase()}`;
             classBlock.title = `${discipline} - ${turma.toUpperCase()}`;
 
-            // Check for conflicts
+            // Check for conflicts (including with fixed classes)
             if (occupiedSlots[cellId]) {
               classBlock.classList.add("conflict");
               // Mark all blocks in this cell as conflict
@@ -249,7 +290,9 @@ function updateConflictStatus(hasConflicts) {
   const statusDiv = document.getElementById("conflictStatus");
 
   if (Object.keys(selectedClasses).length === 0) {
-    statusDiv.innerHTML = "";
+    // Even if no classes are selected, show fixed classes status
+    statusDiv.innerHTML =
+      '<div class="no-conflicts">✅ Aulas fixas carregadas!</div>';
     return;
   }
 
