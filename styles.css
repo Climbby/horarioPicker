@@ -75,7 +75,6 @@ body {
   border: 2px solid transparent;
   transition: all 0.3s ease;
   flex: 0 0 auto;
-  min-width: 280px;
 }
 
 .discipline-card:hover {
