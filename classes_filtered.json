@@ -1,0 +1,781 @@
+[
+    {
+        "class_name": "Algoritmos e Estruturas de Dados",
+        "class_id": "01000197",
+        "shifts": [
+            {
+                "code": "PL1",
+                "type": "PL",
+                "number": "1",
+                "available_slots": "24",
+                "schedule": [
+                    {
+                        "day": "Quinta",
+                        "start": "16:00",
+                        "end": "18:00",
+                        "room": "DEI - C6.5"
+                    }
+                ]
+            },
+            {
+                "code": "PL2",
+                "type": "PL",
+                "number": "2",
+                "available_slots": "24",
+                "schedule": [
+                    {
+                        "day": "Quinta",
+                        "start": "18:00",
+                        "end": "20:00",
+                        "room": "DEI - E6.5"
+                    }
+                ]
+            },
+            {
+                "code": "PL3",
+                "type": "PL",
+                "number": "3",
+                "available_slots": "24",
+                "schedule": [
+                    {
+                        "day": "Sexta",
+                        "start": "14:00",
+                        "end": "16:00",
+                        "room": "DEI - E5.1"
+                    }
+                ]
+            },
+            {
+                "code": "PL4",
+                "type": "PL",
+                "number": "4",
+                "available_slots": "24",
+                "schedule": [
+                    {
+                        "day": "Quinta",
+                        "start": "14:00",
+                        "end": "16:00",
+                        "room": "DEI - E6.4"
+                    }
+                ]
+            },
+            {
+                "code": "PL5",
+                "type": "PL",
+                "number": "5",
+                "available_slots": "24",
+                "schedule": [
+                    {
+                        "day": "Terça",
+                        "start": "16:00",
+                        "end": "18:00",
+                        "room": "DEI - E5.3"
+                    }
+                ]
+            },
+            {
+                "code": "PL6",
+                "type": "PL",
+                "number": "6",
+                "available_slots": "24",
+                "schedule": [
+                    {
+                        "day": "Terça",
+                        "start": "11:00",
+                        "end": "13:00",
+                        "room": "DEI - E6.5"
+                    }
+                ]
+            },
+            {
+                "code": "PL7",
+                "type": "PL",
+                "number": "7",
+                "available_slots": "24",
+                "schedule": [
+                    {
+                        "day": "Quinta",
+                        "start": "16:00",
+                        "end": "18:00",
+                        "room": "DEI - E6.4"
+                    }
+                ]
+            },
+            {
+                "code": "PL8",
+                "type": "PL",
+                "number": "8",
+                "available_slots": "24",
+                "schedule": [
+                    {
+                        "day": "Quinta",
+                        "start": "14:00",
+                        "end": "16:00",
+                        "room": "DEI - C6.6"
+                    }
+                ]
+            },
+            {
+                "code": "TP1",
+                "type": "TP",
+                "number": "1",
+                "available_slots": "0",
+                "schedule": [
+                    {
+                        "day": "Segunda",
+                        "start": "09:00",
+                        "end": "11:00",
+                        "room": "DEI - B1"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "class_name": "Análise e Transformação de Dados",
+        "class_id": "01000169",
+        "shifts": [
+            {
+                "code": "PL1",
+                "type": "PL",
+                "number": "1",
+                "available_slots": "24",
+                "schedule": [
+                    {
+                        "day": "Segunda",
+                        "start": "18:00",
+                        "end": "20:00",
+                        "room": "DEI - E5.1"
+                    }
+                ]
+            },
+            {
+                "code": "PL2",
+                "type": "PL",
+                "number": "2",
+                "available_slots": "24",
+                "schedule": [
+                    {
+                        "day": "Quarta",
+                        "start": "11:00",
+                        "end": "13:00",
+                        "room": "DEI - E6.5"
+                    }
+                ]
+            },
+            {
+                "code": "PL3",
+                "type": "PL",
+                "number": "3",
+                "available_slots": "24",
+                "schedule": [
+                    {
+                        "day": "Segunda",
+                        "start": "18:00",
+                        "end": "20:00",
+                        "room": "DEI - E6.4"
+                    }
+                ]
+            },
+            {
+                "code": "PL4",
+                "type": "PL",
+                "number": "4",
+                "available_slots": "24",
+                "schedule": [
+                    {
+                        "day": "Segunda",
+                        "start": "16:00",
+                        "end": "18:00",
+                        "room": "DEI - E4.1"
+                    }
+                ]
+            },
+            {
+                "code": "PL5",
+                "type": "PL",
+                "number": "5",
+                "available_slots": "24",
+                "schedule": [
+                    {
+                        "day": "Quarta",
+                        "start": "09:00",
+                        "end": "11:00",
+                        "room": "DEI - E6.4"
+                    }
+                ]
+            },
+            {
+                "code": "PL6",
+                "type": "PL",
+                "number": "6",
+                "available_slots": "24",
+                "schedule": [
+                    {
+                        "day": "Segunda",
+                        "start": "11:00",
+                        "end": "13:00",
+                        "room": "DEI - E5.1"
+                    }
+                ]
+            },
+            {
+                "code": "PL7",
+                "type": "PL",
+                "number": "7",
+                "available_slots": "24",
+                "schedule": [
+                    {
+                        "day": "Terça",
+                        "start": "11:00",
+                        "end": "13:00",
+                        "room": "DEI - E6.4"
+                    }
+                ]
+            },
+            {
+                "code": "PL8",
+                "type": "PL",
+                "number": "8",
+                "available_slots": "24",
+                "schedule": [
+                    {
+                        "day": "Quarta",
+                        "start": "11:00",
+                        "end": "13:00",
+                        "room": "DEI - E6.4"
+                    }
+                ]
+            },
+            {
+                "code": "PL9",
+                "type": "PL",
+                "number": "9",
+                "available_slots": "24",
+                "schedule": [
+                    {
+                        "day": "Quarta",
+                        "start": "09:00",
+                        "end": "11:00",
+                        "room": "DEI - C6.6"
+                    }
+                ]
+            },
+            {
+                "code": "TP1",
+                "type": "TP",
+                "number": "1",
+                "available_slots": "0",
+                "schedule": [
+                    {
+                        "day": "Terça",
+                        "start": "09:00",
+                        "end": "11:00",
+                        "room": "FCTUC - Anf B"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "class_name": "Arquitetura de Computadores",
+        "class_id": "01000096",
+        "shifts": [
+            {
+                "code": "PL1",
+                "type": "PL",
+                "number": "1",
+                "available_slots": "16",
+                "schedule": [
+                    {
+                        "day": "Quarta",
+                        "start": "09:00",
+                        "end": "11:00",
+                        "room": "DEEC - S.6.2"
+                    }
+                ]
+            },
+            {
+                "code": "PL2",
+                "type": "PL",
+                "number": "2",
+                "available_slots": "16",
+                "schedule": [
+                    {
+                        "day": "Segunda",
+                        "start": "09:00",
+                        "end": "11:00",
+                        "room": "DEEC - S.5.3"
+                    }
+                ]
+            },
+            {
+                "code": "PL3",
+                "type": "PL",
+                "number": "3",
+                "available_slots": "16",
+                "schedule": [
+                    {
+                        "day": "Terça",
+                        "start": "09:00",
+                        "end": "11:00",
+                        "room": "DEEC - S.4.4"
+                    }
+                ]
+            },
+            {
+                "code": "PL4",
+                "type": "PL",
+                "number": "4",
+                "available_slots": "0",
+                "schedule": []
+            },
+            {
+                "code": "PL5",
+                "type": "PL",
+                "number": "5",
+                "available_slots": "16",
+                "schedule": [
+                    {
+                        "day": "Segunda",
+                        "start": "14:00",
+                        "end": "16:00",
+                        "room": "DEEC - S.4.3"
+                    }
+                ]
+            },
+            {
+                "code": "PL6",
+                "type": "PL",
+                "number": "6",
+                "available_slots": "16",
+                "schedule": [
+                    {
+                        "day": "Quarta",
+                        "start": "11:00",
+                        "end": "13:00",
+                        "room": "DEEC - S.5.3"
+                    }
+                ]
+            },
+            {
+                "code": "PL7",
+                "type": "PL",
+                "number": "7",
+                "available_slots": "16",
+                "schedule": [
+                    {
+                        "day": "Terça",
+                        "start": "14:00",
+                        "end": "16:00",
+                        "room": "DEEC - S.4.3"
+                    }
+                ]
+            },
+            {
+                "code": "PL8",
+                "type": "PL",
+                "number": "8",
+                "available_slots": "0",
+                "schedule": [
+                    {
+                        "day": "Sexta",
+                        "start": "16:00",
+                        "end": "18:00",
+                        "room": "DEEC - S.6.2"
+                    }
+                ]
+            },
+            {
+                "code": "PL9",
+                "type": "PL",
+                "number": "9",
+                "available_slots": "16",
+                "schedule": [
+                    {
+                        "day": "Terça",
+                        "start": "14:00",
+                        "end": "16:00",
+                        "room": "DEEC - T.5.1"
+                    }
+                ]
+            },
+            {
+                "code": "PL10",
+                "type": "PL",
+                "number": "10",
+                "available_slots": "16",
+                "schedule": [
+                    {
+                        "day": "Quarta",
+                        "start": "09:00",
+                        "end": "11:00",
+                        "room": "DEEC - T.4.4"
+                    }
+                ]
+            },
+            {
+                "code": "PL11",
+                "type": "PL",
+                "number": "11",
+                "available_slots": "16",
+                "schedule": [
+                    {
+                        "day": "Terça",
+                        "start": "16:00",
+                        "end": "18:00",
+                        "room": "DEEC - T.4.4"
+                    }
+                ]
+            },
+            {
+                "code": "PL12",
+                "type": "PL",
+                "number": "12",
+                "available_slots": "16",
+                "schedule": [
+                    {
+                        "day": "Terça",
+                        "start": "14:00",
+                        "end": "16:00",
+                        "room": "DEEC - T.4.4"
+                    }
+                ]
+            },
+            {
+                "code": "PL13",
+                "type": "PL",
+                "number": "13",
+                "available_slots": "16",
+                "schedule": [
+                    {
+                        "day": "Terça",
+                        "start": "16:00",
+                        "end": "18:00",
+                        "room": "DEEC - S.5.1"
+                    }
+                ]
+            },
+            {
+                "code": "PL14",
+                "type": "PL",
+                "number": "14",
+                "available_slots": "16",
+                "schedule": [
+                    {
+                        "day": "Quarta",
+                        "start": "11:00",
+                        "end": "13:00",
+                        "room": "DEEC - S.5.1"
+                    }
+                ]
+            },
+            {
+                "code": "PL15",
+                "type": "PL",
+                "number": "15",
+                "available_slots": "16",
+                "schedule": [
+                    {
+                        "day": "Quarta",
+                        "start": "14:00",
+                        "end": "16:00",
+                        "room": "DEEC - T.5.2"
+                    }
+                ]
+            },
+            {
+                "code": "TP1",
+                "type": "TP",
+                "number": "1",
+                "available_slots": "175",
+                "schedule": [
+                    {
+                        "day": "Segunda",
+                        "start": "16:00",
+                        "end": "18:00",
+                        "room": "FCTUC - Anf A"
+                    }
+                ]
+            },
+            {
+                "code": "TP2",
+                "type": "TP",
+                "number": "2",
+                "available_slots": "175",
+                "schedule": [
+                    {
+                        "day": "Quinta",
+                        "start": "14:00",
+                        "end": "16:00",
+                        "room": "FCTUC - Anf C"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "class_name": "Bases de Dados",
+        "class_id": "01000213",
+        "shifts": [
+            {
+                "code": "PL1",
+                "type": "PL",
+                "number": "1",
+                "available_slots": "24",
+                "schedule": [
+                    {
+                        "day": "Quinta",
+                        "start": "09:00",
+                        "end": "11:00",
+                        "room": "DEI - C6.2"
+                    }
+                ]
+            },
+            {
+                "code": "PL2",
+                "type": "PL",
+                "number": "2",
+                "available_slots": "24",
+                "schedule": [
+                    {
+                        "day": "Quinta",
+                        "start": "11:00",
+                        "end": "13:00",
+                        "room": "DEI - E6.2"
+                    }
+                ]
+            },
+            {
+                "code": "PL3",
+                "type": "PL",
+                "number": "3",
+                "available_slots": "24",
+                "schedule": [
+                    {
+                        "day": "Quinta",
+                        "start": "14:00",
+                        "end": "16:00",
+                        "room": "DEI - C6.5"
+                    }
+                ]
+            },
+            {
+                "code": "PL4",
+                "type": "PL",
+                "number": "4",
+                "available_slots": "24",
+                "schedule": [
+                    {
+                        "day": "Quarta",
+                        "start": "09:00",
+                        "end": "11:00",
+                        "room": "DEI - E6.5"
+                    }
+                ]
+            },
+            {
+                "code": "PL5",
+                "type": "PL",
+                "number": "5",
+                "available_slots": "24",
+                "schedule": [
+                    {
+                        "day": "Segunda",
+                        "start": "16:00",
+                        "end": "18:00",
+                        "room": "DEI - C6.2"
+                    }
+                ]
+            },
+            {
+                "code": "PL6",
+                "type": "PL",
+                "number": "6",
+                "available_slots": "24",
+                "schedule": [
+                    {
+                        "day": "Sexta",
+                        "start": "11:00",
+                        "end": "13:00",
+                        "room": "DEI - E6.5"
+                    }
+                ]
+            },
+            {
+                "code": "PL7",
+                "type": "PL",
+                "number": "7",
+                "available_slots": "24",
+                "schedule": [
+                    {
+                        "day": "Terça",
+                        "start": "16:00",
+                        "end": "18:00",
+                        "room": "DEI - C6.2"
+                    }
+                ]
+            },
+            {
+                "code": "PL8",
+                "type": "PL",
+                "number": "8",
+                "available_slots": "24",
+                "schedule": [
+                    {
+                        "day": "Terça",
+                        "start": "14:00",
+                        "end": "16:00",
+                        "room": "DEI - C6.6"
+                    }
+                ]
+            },
+            {
+                "code": "PL9",
+                "type": "PL",
+                "number": "9",
+                "available_slots": "24",
+                "schedule": [
+                    {
+                        "day": "Segunda",
+                        "start": "11:00",
+                        "end": "13:00",
+                        "room": "DEI - C6.2"
+                    }
+                ]
+            },
+            {
+                "code": "TP1",
+                "type": "TP",
+                "number": "1",
+                "available_slots": "0",
+                "schedule": [
+                    {
+                        "day": "Sexta",
+                        "start": "09:00",
+                        "end": "11:00",
+                        "room": "FCTUC - Anf B"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "class_name": "Redes de Comunicação",
+        "class_id": "01017308",
+        "shifts": [
+            {
+                "code": "PL1",
+                "type": "PL",
+                "number": "1",
+                "available_slots": "24",
+                "schedule": [
+                    {
+                        "day": "Quinta",
+                        "start": "18:00",
+                        "end": "20:00",
+                        "room": "DEI - C6.2"
+                    }
+                ]
+            },
+            {
+                "code": "PL2",
+                "type": "PL",
+                "number": "2",
+                "available_slots": "24",
+                "schedule": [
+                    {
+                        "day": "Sexta",
+                        "start": "18:00",
+                        "end": "20:00",
+                        "room": "DEI - C6.3"
+                    }
+                ]
+            },
+            {
+                "code": "PL3",
+                "type": "PL",
+                "number": "3",
+                "available_slots": "24",
+                "schedule": [
+                    {
+                        "day": "Sexta",
+                        "start": "14:00",
+                        "end": "16:00",
+                        "room": "DEI - C6.5"
+                    }
+                ]
+            },
+            {
+                "code": "PL4",
+                "type": "PL",
+                "number": "4",
+                "available_slots": "24",
+                "schedule": [
+                    {
+                        "day": "Quinta",
+                        "start": "16:00",
+                        "end": "18:00",
+                        "room": "DEI - C6.4"
+                    }
+                ]
+            },
+            {
+                "code": "PL5",
+                "type": "PL",
+                "number": "5",
+                "available_slots": "24",
+                "schedule": [
+                    {
+                        "day": "Quinta",
+                        "start": "11:00",
+                        "end": "13:00",
+                        "room": "DEI - C6.4"
+                    }
+                ]
+            },
+            {
+                "code": "PL6",
+                "type": "PL",
+                "number": "6",
+                "available_slots": "24",
+                "schedule": [
+                    {
+                        "day": "Terça",
+                        "start": "14:00",
+                        "end": "16:00",
+                        "room": "DEI - C6.4"
+                    }
+                ]
+            },
+            {
+                "code": "PL7",
+                "type": "PL",
+                "number": "7",
+                "available_slots": "24",
+                "schedule": [
+                    {
+                        "day": "Quinta",
+                        "start": "09:00",
+                        "end": "11:00",
+                        "room": "DEI - C6.4"
+                    }
+                ]
+            },
+            {
+                "code": "TP1",
+                "type": "TP",
+                "number": "1",
+                "available_slots": "0",
+                "schedule": [
+                    {
+                        "day": "Segunda",
+                        "start": "14:00",
+                        "end": "16:00",
+                        "room": "FCTUC - Anf B"
+                    }
+                ]
+            }
+        ]
+    }
+]

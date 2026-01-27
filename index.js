@@ -1,41 +1,69 @@
 let scheduleData;
 
-// Define fixed classes that always appear on the schedule
-const fixedClasses = [
-  {
-    dia: "segunda-feira",
-    horario: "14:00-16:00",
-    name: "TC *", // You can customize this name
-    type: "fixed",
-  },
-  {
-    dia: "terca-feira",
-    horario: "16:00-18:00",
-    name: "SO *",
-    type: "fixed",
-  },
-  {
-    dia: "sexta-feira",
-    horario: "11:00-13:00",
-    name: "TI *",
-    type: "fixed",
-  },
-];
+// UPDATED: Fixed classes array is now empty
+const fixedClasses = [];
 
 (async () => {
   try {
-    const response = await fetch("./horarios.json");
+    // Point to the new JSON file
+    const response = await fetch("./classes_filtered.json");
     if (!response.ok) {
-      throw new Error(`Erro ao carregar horarios.json: ${response.status}`);
+      throw new Error(
+        `Erro ao carregar classes_filtered.json: ${response.status}`,
+      );
     }
-    scheduleData = await response.json();
+    const rawData = await response.json();
+
+    // Transform the new JSON structure to the app's expected format
+    scheduleData = transformData(rawData);
   } catch (error) {
     console.error("Falha no carregamento dos dados:", error);
     // Show error message in UI
-    document.getElementById("disciplinesGrid").innerHTML =
-      '<div class="error" style="padding: 20px; text-align: center; color: #e74c3c; font-weight: bold;">Erro ao carregar horários. Verifique o arquivo horarios.json.</div>';
+    const grid = document.getElementById("disciplinesGrid");
+    if (grid) {
+      grid.innerHTML =
+        '<div class="error" style="padding: 20px; text-align: center; color: #e74c3c; font-weight: bold;">Erro ao carregar horários. Verifique o arquivo classes_filtered.json.</div>';
+    }
   }
 })();
+
+// Helper function to convert new JSON format to the App's format
+function transformData(rawData) {
+  const newData = {};
+
+  const dayMap = {
+    Segunda: "segunda-feira",
+    Terça: "terca-feira",
+    Quarta: "quarta-feira",
+    Quinta: "quinta-feira",
+    Sexta: "sexta-feira",
+  };
+
+  rawData.forEach((course) => {
+    const disciplineName = course.class_name;
+    newData[disciplineName] = {};
+
+    course.shifts.forEach((shift) => {
+      // Only include if there is a valid schedule
+      if (shift.schedule && shift.schedule.length > 0) {
+        newData[disciplineName][shift.code] = shift.schedule.map((slot) => ({
+          // Map "Segunda" -> "segunda-feira"
+          dia: dayMap[slot.day] || slot.day.toLowerCase(),
+          // Combine "09:00" and "11:00" -> "09:00-11:00"
+          horario: `${slot.start}-${slot.end}`,
+          room: slot.room,
+        }));
+      }
+    });
+
+    // Clean up empty disciplines
+    if (Object.keys(newData[disciplineName]).length === 0) {
+      delete newData[disciplineName];
+    }
+  });
+
+  return newData;
+}
 
 const days = [
   "segunda-feira",
@@ -55,14 +83,19 @@ const selectedClasses = {};
 
 async function initializePage() {
   // Wait for data to load
-  while (!scheduleData) {
+  let attempts = 0;
+  while (!scheduleData && attempts < 20) {
     await new Promise((resolve) => setTimeout(resolve, 100));
+    attempts++;
   }
 
   if (!scheduleData || Object.keys(scheduleData).length === 0) {
     console.error("Nenhum dado de horários encontrado.");
-    document.getElementById("disciplinesGrid").innerHTML =
-      '<div class="error" style="padding: 20px; text-align: center; color: #e74c3c; font-weight: bold;">Nenhum dado de horários encontrado.</div>';
+    const grid = document.getElementById("disciplinesGrid");
+    if (grid) {
+      grid.innerHTML =
+        '<div class="error" style="padding: 20px; text-align: center; color: #e74c3c; font-weight: bold;">Nenhum dado de horários encontrado.</div>';
+    }
     return;
   }
 
@@ -70,19 +103,19 @@ async function initializePage() {
   createScheduleGrid();
 
   // Add event listeners to buttons
-  document
-    .getElementById("selectAllBtn")
-    .addEventListener("click", selectAllTurmas);
-  document
-    .getElementById("clearAllBtn")
-    .addEventListener("click", clearAllTurmas);
+  const selectAllBtn = document.getElementById("selectAllBtn");
+  if (selectAllBtn) selectAllBtn.addEventListener("click", selectAllTurmas);
 
-  // Initialize schedule with fixed classes
+  const clearAllBtn = document.getElementById("clearAllBtn");
+  if (clearAllBtn) clearAllBtn.addEventListener("click", clearAllTurmas);
+
+  // Initialize schedule (now empty initially since no fixed classes)
   updateSchedule();
 }
 
 function createDisciplineSelectors() {
   const grid = document.getElementById("disciplinesGrid");
+  grid.innerHTML = ""; // Clear existing content
 
   Object.keys(scheduleData).forEach((discipline) => {
     const card = document.createElement("div");
@@ -91,6 +124,7 @@ function createDisciplineSelectors() {
     const title = document.createElement("div");
     title.className = "discipline-title";
     title.textContent = discipline;
+    title.title = discipline;
 
     const selector = document.createElement("div");
     selector.className = "turma-selector";
@@ -123,7 +157,7 @@ function createDisciplineSelectors() {
         // Remove the turma from selectedClasses
         if (selectedClasses[discipline]) {
           selectedClasses[discipline] = selectedClasses[discipline].filter(
-            (t) => t !== turma
+            (t) => t !== turma,
           );
           if (selectedClasses[discipline].length === 0) {
             delete selectedClasses[discipline];
@@ -145,7 +179,7 @@ function createDisciplineSelectors() {
         // Toggle selection
         if (selectedClasses[discipline].includes(turma)) {
           selectedClasses[discipline] = selectedClasses[discipline].filter(
-            (t) => t !== turma
+            (t) => t !== turma,
           );
           button.classList.remove("selected");
           if (selectedClasses[discipline].length === 0) {
@@ -174,6 +208,7 @@ function createDisciplineSelectors() {
 
 function createScheduleGrid() {
   const grid = document.getElementById("scheduleGrid");
+  grid.innerHTML = ""; // Clear existing grid
 
   // Empty corner cell
   const cornerCell = document.createElement("div");
@@ -181,12 +216,11 @@ function createScheduleGrid() {
   cornerCell.textContent = "Horário";
   grid.appendChild(cornerCell);
 
-  // Day headers (with full name for tooltip)
+  // Day headers
   days.forEach((day) => {
     const dayCell = document.createElement("div");
     dayCell.className = "schedule-header";
 
-    // Create span for full day name (hidden on mobile)
     const daySpan = document.createElement("span");
     daySpan.textContent =
       day.charAt(0).toUpperCase() + day.slice(1).replace("-feira", "");
@@ -224,26 +258,9 @@ function updateSchedule() {
   const occupiedSlots = {};
   let hasConflicts = false;
 
-  // First, add fixed classes to the schedule
-  fixedClasses.forEach((fixedClass) => {
-    const cellId = `${fixedClass.dia}-${fixedClass.horario}`;
-    const cell = document.getElementById(cellId);
-
-    if (cell) {
-      const classBlock = document.createElement("div");
-      classBlock.className = "class-block fixed-class";
-      classBlock.textContent = fixedClass.name;
-      classBlock.title = `${fixedClass.name} (Fixo)`;
-
-      cell.appendChild(classBlock);
-      occupiedSlots[cellId] = true;
-    }
-  });
-
-  // Then add selected classes to schedule
+  // Add selected classes to schedule
   Object.entries(selectedClasses).forEach(([discipline, turmas]) => {
     turmas.forEach((turma) => {
-      // Check if the turma still exists in scheduleData
       if (scheduleData[discipline] && scheduleData[discipline][turma]) {
         const classes = scheduleData[discipline][turma];
 
@@ -256,17 +273,21 @@ function updateSchedule() {
             classBlock.className = "class-block";
 
             // Use abbreviated text for mobile
-            const disciplineAbbr =
-              discipline.length > 12
-                ? discipline.substring(0, 10) + "..."
-                : discipline;
-            classBlock.textContent = `${disciplineAbbr} - ${turma.toUpperCase()}`;
-            classBlock.title = `${discipline} - ${turma.toUpperCase()}`;
+            const disciplineName = discipline;
+            const shortName =
+              disciplineName.length > 15
+                ? disciplineName.substring(0, 12) + "..."
+                : disciplineName;
 
-            // Check for conflicts (including with fixed classes)
+            classBlock.textContent = `${shortName} - ${turma.toUpperCase()}`;
+
+            // Add Room to Tooltip
+            const roomInfo = classInfo.room ? `\nSala: ${classInfo.room}` : "";
+            classBlock.title = `${discipline} - ${turma.toUpperCase()}${roomInfo}`;
+
+            // Check for conflicts
             if (occupiedSlots[cellId]) {
               classBlock.classList.add("conflict");
-              // Mark all blocks in this cell as conflict
               const existingBlocks = cell.querySelectorAll(".class-block");
               existingBlocks.forEach((block) => {
                 block.classList.add("conflict");
@@ -282,17 +303,17 @@ function updateSchedule() {
     });
   });
 
-  // Update conflict status
   updateConflictStatus(hasConflicts);
 }
 
 function updateConflictStatus(hasConflicts) {
   const statusDiv = document.getElementById("conflictStatus");
+  if (!statusDiv) return;
 
+  // If no classes selected, show neutral message
   if (Object.keys(selectedClasses).length === 0) {
-    // Even if no classes are selected, show fixed classes status
     statusDiv.innerHTML =
-      '<div class="no-conflicts">✅ Aulas fixas carregadas!</div>';
+      '<div class="no-conflicts" style="background-color: #95a5a6;">Selecione suas turmas</div>';
     return;
   }
 
@@ -306,17 +327,14 @@ function updateConflictStatus(hasConflicts) {
 }
 
 function selectAllTurmas() {
-  // Clear current selections
   for (const discipline in selectedClasses) {
     delete selectedClasses[discipline];
   }
 
-  // Select all turmas for all disciplines
   Object.keys(scheduleData).forEach((discipline) => {
     selectedClasses[discipline] = Object.keys(scheduleData[discipline]);
   });
 
-  // Update UI to reflect selections
   document.querySelectorAll(".turma-button").forEach((button) => {
     const discipline = button.dataset.discipline;
     const turma = button.dataset.turma;
@@ -335,12 +353,10 @@ function selectAllTurmas() {
 }
 
 function clearAllTurmas() {
-  // Clear all selections
   for (const discipline in selectedClasses) {
     delete selectedClasses[discipline];
   }
 
-  // Update UI to reflect cleared selections
   document.querySelectorAll(".turma-button").forEach((button) => {
     button.classList.remove("selected");
   });
@@ -348,7 +364,6 @@ function clearAllTurmas() {
   updateSchedule();
 }
 
-// Initialize the page when DOM is loaded
 document.addEventListener("DOMContentLoaded", async () => {
   await initializePage();
 });
