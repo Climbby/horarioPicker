@@ -6,9 +6,10 @@
 
 body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #cbd2d9;
   min-height: 100vh;
   padding: 20px;
+  font-size: 1.05rem;
 }
 
 .container {
@@ -21,7 +22,7 @@ body {
 }
 
 .header {
-  background: linear-gradient(135deg, #2c3e50, #3498db);
+  background: #2c3e50;
   color: white;
   padding: 30px;
   text-align: center;
@@ -47,55 +48,107 @@ body {
   flex-direction: row;
   gap: 25px;
   margin-bottom: 30px;
-  overflow-x: auto;
-  padding-bottom: 10px;
-  scrollbar-width: thin;
-  scrollbar-color: #3498db #f1f1f1;
+  flex-wrap: wrap; 
+  justify-content: center;
 }
 
-.disciplines-grid::-webkit-scrollbar {
-  height: 8px;
-}
 
-.disciplines-grid::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 10px;
-}
-
-.disciplines-grid::-webkit-scrollbar-thumb {
-  background: #3498db;
-  border-radius: 10px;
-}
 
 .discipline-card {
   background: white;
   border-radius: 15px;
-  padding: 20px;
+  padding: 0;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-  border: 2px solid transparent;
   transition: all 0.3s ease;
   flex: 0 0 auto;
+  max-width: 100%; /* Force wrapping on smaller screens or when content is wide */
+  overflow: hidden;
 }
 
 .discipline-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
-  border-color: #3498db;
 }
 
 .discipline-title {
   font-size: 1.4rem;
   font-weight: bold;
   color: #2c3e50;
-  margin-bottom: 15px;
+  margin-bottom: 0;
   text-align: center;
-  padding: 10px;
+  padding: 15px;
   background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-  border-radius: 10px;
+  border-radius: 0;
+}
+
+.discipline-header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Custom Checkbox Styling */
+.discipline-toggle-label {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+}
+
+.discipline-toggle-checkbox {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.discipline-toggle-custom {
+  height: 24px;
+  width: 24px;
+  background-color: #eee;
+  border-radius: 6px;
+  border: 2px solid #ccc;
+  transition: all 0.2s ease-in-out;
+  position: relative;
+}
+
+.discipline-toggle-label:hover .discipline-toggle-custom {
+  background-color: #e2e6ea;
+  border-color: #adb5bd;
+}
+
+.discipline-toggle-checkbox:checked ~ .discipline-toggle-custom {
+  background-color: #2ecc71;
+  border-color: #2ecc71;
+}
+
+.discipline-toggle-custom:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.discipline-toggle-checkbox:checked ~ .discipline-toggle-custom:after {
+  display: block;
+}
+
+.discipline-toggle-custom:after {
+  left: 7px;
+  top: 3px;
+  width: 6px;
+  height: 12px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
 }
 
 .turma-selector {
   margin-bottom: 15px;
+  padding: 20px;
 }
 
 .turma-selector label {
@@ -107,11 +160,15 @@ body {
 
 .turma-buttons {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: row;
+  flex-wrap: wrap; /* Ensure items wrap */
   gap: 8px;
+  width: 100%; /* Take full width of parent */
+  justify-content: center; /* Center buttons if there is space */
 }
 
 .turma-button-container {
+  max-width: 100%; /* Prevent container from overflowing */
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -132,9 +189,9 @@ body {
 }
 
 .turma-button.selected {
-  background: #3498db;
+  background: var(--discipline-color, #3498db);
   color: white;
-  border-color: #3498db;
+  border-color: var(--discipline-color, #3498db);
 }
 
 .turma-button:focus {
@@ -192,7 +249,7 @@ body {
 .schedule-grid {
   display: grid;
   grid-template-columns: 80px repeat(5, minmax(120px, 1fr));
-  gap: 1px;
+  gap: 1px 3px;
   background: #ddd;
   border-radius: 10px;
   overflow: hidden;
@@ -205,7 +262,7 @@ body {
   padding: 15px 10px;
   text-align: center;
   font-weight: bold;
-  font-size: 0.9rem;
+  font-size: 1rem;
 }
 
 .time-slot {
@@ -215,15 +272,20 @@ body {
   font-weight: 600;
   color: #2c3e50;
   border-right: 1px solid #ddd;
-  font-size: 0.85rem;
+  font-size: 0.95rem;
 }
 
 .schedule-cell {
   background: white;
-  padding: 10px;
+  padding: 0;
   min-height: 60px;
   position: relative;
   transition: all 0.3s ease;
+  vertical-align: top;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 1px;
 }
 
 .schedule-cell:hover {
@@ -233,24 +295,58 @@ body {
 .class-block {
   background: linear-gradient(135deg, #3498db, #2980b9);
   color: white;
-  padding: 8px;
-  border-radius: 6px;
-  font-size: 0.85rem;
+  padding: 4px;
+  border-radius: 0;
+  font-size: 0.9rem;
   font-weight: bold;
   text-align: center;
-  margin-bottom: 5px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  margin-bottom: 0;
+  box-shadow: none;
+  border-right: 1px solid rgba(255,255,255,0.2);
+  border-bottom: none;
   transition: all 0.3s ease;
-  word-break: break-word;
+  /* word-break: break-word; Removed for truncation */
+  height: auto; 
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0; 
+  padding: 0 4px;
+  flex-wrap: wrap; /* Allow wrapping if absolutely needed, though we try to truncate name first */
 }
 
-.class-block:hover {
+/* Specific truncation for the name */
+.discipline-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 0 1 auto; /* Allow shrinking */
+  min-width: 0;
+  max-width: 100%;
+}
+
+.turma-name {
+  white-space: normal; /* Allow wrapping for turma if needed */
+  flex: 0 0 auto; /* Don't shrink the turma name */
+}
+
+.separator-text {
+  white-space: pre;
+}
+
+/* Remove old class-text style if it exists or override it */
+.class-text {
+  display: none; 
+}
+
+/* .class-block:hover {
   transform: scale(1.05);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-}
+} */
 
 .conflict {
-  background: linear-gradient(135deg, #e74c3c, #c0392b) !important;
+  background: #e74c3c !important;
   animation: pulse 2s infinite;
 }
 
@@ -259,7 +355,7 @@ body {
     opacity: 1;
   }
   50% {
-    opacity: 0.7;
+    opacity: 0.85;
   }
   100% {
     opacity: 1;
@@ -270,7 +366,7 @@ body {
   background: #27ae60;
   color: white;
   padding: 10px 20px;
-  border-radius: 25px;
+  border-radius: 8px;
   text-align: center;
   margin-top: 20px;
   font-weight: bold;
@@ -280,7 +376,7 @@ body {
   background: #e74c3c;
   color: white;
   padding: 10px 20px;
-  border-radius: 25px;
+  border-radius: 8px;
   text-align: center;
   margin-top: 20px;
   font-weight: bold;
@@ -290,8 +386,22 @@ body {
   display: flex;
   gap: 15px;
   margin-bottom: 30px;
-  justify-content: center;
+  justify-content: space-between;
   flex-wrap: wrap;
+  align-items: center;
+}
+
+.button-group-left {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.button-group-right {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
 }
 
 .control-button {
@@ -305,6 +415,27 @@ body {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+.icon-btn {
+  padding: 10px 15px; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #3498db;
+  color: white;
+  border: none;
+}
+
+.icon-btn:hover:not(:disabled) {
+  background-color: #2980b9;
+  transform: translateY(-2px);
+}
+
+.icon-btn:disabled {
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
 .control-button:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
@@ -315,21 +446,39 @@ body {
 }
 
 .select-all {
-  background: linear-gradient(135deg, #27ae60, #2ecc71);
+  background-color: #3498db;
   color: white;
 }
 
 .select-all:hover {
-  background: linear-gradient(135deg, #229954, #27ae60);
+  background-color: #2980b9;
 }
 
 .clear-all {
-  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  background-color: #3498db;
   color: white;
 }
 
 .clear-all:hover {
-  background: linear-gradient(135deg, #c0392b, #a93226);
+  background-color: #2980b9;
+}
+
+.restore-btn {
+  background-color: #3498db;
+  color: white;
+}
+
+.restore-btn:hover {
+  background-color: #2980b9;
+}
+
+.toggle-tp {
+  background-color: #3498db;
+  color: white;
+}
+
+.toggle-tp:hover {
+  background-color: #2980b9;
 }
 
 /* Mobile-specific styles */

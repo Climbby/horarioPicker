@@ -10,10 +10,6 @@
     <div class="container">
       <div class="header">
         <h1>📅 Seletor de Horários</h1>
-        <p>
-          Selecione as turmas para cada disciplina e visualize seu horário
-          semanal
-        </p>
       </div>
 
       <div class="main-content">
@@ -22,22 +18,49 @@
         </div>
 
         <div class="button-container">
-          <button id="selectAllBtn" class="control-button select-all">
-            Selecionar Todas as Turmas
-          </button>
-          <button id="clearAllBtn" class="control-button clear-all">
-            Limpar Todas as Seleções
-          </button>
+          <div class="button-group-left">
+            <button id="toggleAllBtn" class="control-button select-all">
+              Selecionar/Limpar Turmas
+            </button>
+            <button id="toggleTPBtn" class="control-button toggle-tp">
+              Selecionar/Limpar TPs
+            </button>
+          </div>
+          <div class="button-group-right">
+             <button id="undoBtn" class="control-button icon-btn" title="Desfazer" disabled>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7v6h6"></path><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"></path></svg>
+            </button>
+            <button id="redoBtn" class="control-button icon-btn" title="Refazer" disabled>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 7v6h-6"></path><path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3l3 3.7"></path></svg>
+            </button>
+            <button id="restoreBtn" class="control-button restore-btn">
+              Restaurar Disciplinas
+            </button>
+          </div>
         </div>
 
+
+
         <div class="schedule-container">
-          <h2 class="schedule-title">🗓️ Horário Semanal</h2>
+
           <div class="schedule-scroll-container">
             <div class="schedule-grid" id="scheduleGrid">
               <!-- Schedule will be populated here -->
             </div>
           </div>
           <div id="conflictStatus"></div>
+          
+          <div class="vagas-toggle-container-bottom" style="display: flex; align-items: center; justify-content: flex-start; margin-top: 20px; padding-bottom: 20px;">
+            <input type="checkbox" id="toggleVagasBtn" class="vagas-checkbox" style="width: 20px; height: 20px; margin-right: 10px; cursor: pointer;">
+            <label for="toggleVagasBtn" style="color: #2c3e50; font-size: 1.2rem; font-weight: bold; cursor: pointer; user-select: none; margin-right: 20px;">Vagas</label>
+
+            <input type="checkbox" id="toggleTurmaBtn" class="turma-checkbox" style="width: 20px; height: 20px; margin-right: 10px; cursor: pointer;" checked>
+            <label for="toggleTurmaBtn" style="color: #2c3e50; font-size: 1.2rem; font-weight: bold; cursor: pointer; user-select: none; margin-right: 20px;">Turma</label>
+
+            <input type="checkbox" id="toggleAcronymBtn" class="acronym-checkbox" style="width: 20px; height: 20px; margin-right: 10px; cursor: pointer;" checked>
+            <label for="toggleAcronymBtn" style="color: #2c3e50; font-size: 1.2rem; font-weight: bold; cursor: pointer; user-select: none;">Sigla</label>
+          </div>
+
         </div>
       </div>
     </div>
