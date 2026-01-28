@@ -71,8 +71,17 @@
             <input type="checkbox" id="toggleRoomBtn" class="room-checkbox" style="width: 20px; height: 20px; margin-right: 10px; cursor: pointer;">
             <label for="toggleRoomBtn" style="color: #2c3e50; font-size: 1.2rem; font-weight: bold; cursor: pointer; user-select: none;">Sala</label>
             
+            <input type="checkbox" id="toggleExportOptionsBtn" class="export-checkbox" style="width: 20px; height: 20px; margin-right: 10px; cursor: pointer; margin-left: 20px;">
+            <label for="toggleExportOptionsBtn" style="color: #2c3e50; font-size: 1.2rem; font-weight: bold; cursor: pointer; user-select: none;">Exportar</label>
+            
             <button id="copyScheduleBtn" class="control-button copy-btn" title="Copiar Imagem" style="margin-left: auto;">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button id="disciplinePriorityBtn" class="control-button icon-btn" title="Ordem das Disciplinas (CSV)" style="margin-left: 10px; background-color: #8e44ad;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+            </button>
+            <button id="priorityModeBtn" class="control-button icon-btn" title="Modo de Prioridade" style="margin-left: 10px; background-color: #f1c40f;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
             </button>
             <button id="csvBtn" class="control-button csv-btn" title="Exportar CSV" style="margin-left: 10px;">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
@@ -113,6 +122,18 @@
             </div>
         </div>
 
+      </div>
+    </div>
+
+    <div id="disciplinePriorityModal" class="modal">
+      <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h2>Ordem das Disciplinas (CSV)</h2>
+        <p class="modal-hint">Use as setas para definir a prioridade (1 = Maior prioridade).</p>
+        <ul id="disciplinePriorityList" class="priority-list"></ul>
+        <div class="modal-buttons">
+            <button id="savePriorityBtn" class="control-button" style="background-color: #27ae60;">Salvar Ordem</button>
+        </div>
       </div>
     </div>
 

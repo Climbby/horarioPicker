@@ -182,6 +182,7 @@ body {
   background: white;
   cursor: pointer;
   transition: all 0.3s ease;
+  position: relative; /* Added for priority badge */
 }
 
 .turma-button:hover {
@@ -529,6 +530,35 @@ body.delete-mode .class-block:not(.locked):hover::after {
 
 #lockModeBtn.active:hover {
     background-color: #f39c12;
+}
+
+/* Priority Mode Styles */
+#priorityModeBtn.active {
+  background-color: #e67e22; 
+  border-color: #d35400; 
+}
+
+#priorityModeBtn.active:hover {
+    background-color: #d35400;
+}
+
+.priority-badge {
+    position: absolute;
+    top: -8px;
+    left: -8px; /* Different from remove button (top right) */
+    background-color: #e67e22; /* Warning/Priority color */
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    z-index: 10;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    border: 1px solid white;
 }
 
 /* Locked Block Styling */
@@ -1037,3 +1067,191 @@ body.delete-mode .class-block.locked:hover {
     background-color: #27ae60 !important;
 }
 
+/* Priority Mode Styles */
+#priorityModeBtn.active {
+  background-color: #f1c40f; 
+  border-color: #f39c12; 
+  color: white;
+}
+
+#priorityModeBtn.active:hover {
+    background-color: #f39c12;
+}
+
+.priority-badge {
+    position: absolute;
+    top: -8px;
+    left: -8px; 
+    background-color: #f39c12; /* Star color match */
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    z-index: 10;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    border: 1px solid white;
+}
+
+/* Logic: Can only set priority if >1 class selected */
+body.priority-mode .class-block {
+     /* Default state when in priority mode */
+}
+
+/* The glow for classes that CAN have priority set */
+body.priority-mode .class-block.priority-target {
+    cursor: pointer !important;
+    box-shadow: 0 0 8px 2px rgba(241, 196, 15, 0.8) !important; /* Yellow glow */
+    border: 1px solid #f1c40f !important;
+    animation: priorityPulse 2s infinite;
+    z-index: 5;
+}
+
+@keyframes priorityPulse {
+  0% {
+    box-shadow: 0 0 5px 1px rgba(241, 196, 15, 0.6);
+  }
+  50% {
+    box-shadow: 0 0 12px 3px rgba(241, 196, 15, 0.9);
+  }
+  100% {
+    box-shadow: 0 0 5px 1px rgba(241, 196, 15, 0.6);
+  }
+}
+
+/* Modal Styles */
+.modal {
+  display: none; 
+  position: fixed; 
+  z-index: 2000; 
+  left: 0;
+  top: 0;
+  width: 100%; 
+  height: 100%; 
+  overflow: auto; 
+  background-color: rgb(0,0,0); 
+  background-color: rgba(0,0,0,0.5); 
+  animation: fadeIn 0.3s;
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 10% auto; 
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  max-width: 600px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  position: relative;
+  animation: slideIn 0.3s;
+}
+
+.close-modal {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.close-modal:hover,
+.close-modal:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.modal h2 {
+    color: #2c3e50;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.modal-hint {
+    text-align: center;
+    color: #7f8c8d;
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+}
+
+.priority-list {
+    list-style-type: none;
+    padding: 0;
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.priority-item {
+    padding: 10px 15px;
+    background: #f8f9fa;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.2s;
+    user-select: none;
+}
+
+.priority-item:last-child {
+    border-bottom: none;
+}
+
+.priority-item:hover {
+    background: #e9ecef;
+}
+
+.priority-index {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 24px;
+    height: 24px;
+    background-color: #34495e;
+    color: white;
+    border-radius: 50%;
+    font-size: 0.8rem;
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.priority-controls {
+    display: flex;
+    gap: 5px;
+}
+
+.priority-btn {
+    background: none;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 2px 6px;
+    color: #7f8c8d;
+    font-size: 0.8rem;
+}
+
+.priority-btn:hover {
+    background: #ecf0f1;
+    color: #2c3e50;
+}
+
+.modal-buttons {
+    margin-top: 20px;
+    text-align: center;
+}
+
+@keyframes fadeIn {
+  from {opacity: 0} 
+  to {opacity: 1}
+}
+
+@keyframes slideIn {
+  from {transform: translateY(-50px); opacity: 0;} 
+  to {transform: translateY(0); opacity: 1;}
+}

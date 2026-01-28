@@ -1,0 +1,59 @@
+/* Existing styles... */
+
+/* Priority Mode Styles */
+#priorityModeBtn.active {
+  background-color: #f1c40f; 
+  border-color: #f39c12; 
+  color: white;
+}
+
+#priorityModeBtn.active:hover {
+    background-color: #f39c12;
+}
+
+.priority-badge {
+    position: absolute;
+    top: -8px;
+    left: -8px; 
+    background-color: #f39c12; /* Star color match */
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    z-index: 10;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    border: 1px solid white;
+}
+
+/* Logic: Can only set priority if >1 class selected */
+body.priority-mode .class-block {
+     /* Default: Not interactable for priority unless targeted */
+     /* cursor: default; - Actually we might want to keep default cursor or not change it yet */
+}
+
+/* The glow for classes that CAN have priority set */
+body.priority-mode .class-block.priority-target {
+    cursor: pointer;
+    box-shadow: 0 0 8px 2px rgba(241, 196, 15, 0.8); /* Yellow glow */
+    border: 1px solid #f1c40f !important;
+    animation: priorityPulse 2s infinite;
+}
+
+@keyframes priorityPulse {
+  0% {
+    box-shadow: 0 0 5px 1px rgba(241, 196, 15, 0.6);
+  }
+  50% {
+    box-shadow: 0 0 12px 3px rgba(241, 196, 15, 0.9);
+  }
+  100% {
+    box-shadow: 0 0 5px 1px rgba(241, 196, 15, 0.6);
+  }
+}
+
+/* Remove other hover effects in priority mode if needed, or overlay them */
