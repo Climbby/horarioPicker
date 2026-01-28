@@ -309,30 +309,55 @@ body {
   height: auto; 
   flex: 1;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column; /* Stack top and bottom */
+  justify-content: space-between; /* Space out top and bottom */
+  align-items: stretch; /* detailed info spans full width */
   min-width: 0; 
-  padding: 0 4px;
-  flex-wrap: wrap; /* Allow wrapping if absolutely needed, though we try to truncate name first */
+  padding: 4px;
 }
 
+/* Specific truncation for the name */
 /* Specific truncation for the name */
 .discipline-name {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  flex: 0 1 auto; /* Allow shrinking */
-  min-width: 0;
   max-width: 100%;
 }
 
+.class-info-top {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  width: 100%;
+  overflow: hidden;
+}
+
+.class-info-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  width: 100%;
+  font-size: 0.75rem; /* Slightly smaller for details */
+  margin-top: 2px;
+}
+
+.class-room {
+  text-align: left;
+  opacity: 0.9;
+  margin-right: 4px;
+  white-space: nowrap;
+}
+
 .turma-name {
-  white-space: normal; /* Allow wrapping for turma if needed */
-  flex: 0 0 auto; /* Don't shrink the turma name */
+  text-align: right;
+  white-space: nowrap;
+  margin-left: auto; /* Push to right */
 }
 
 .separator-text {
-  white-space: pre;
+  display: none; /* No longer needed */
 }
 
 /* Remove old class-text style if it exists or override it */
@@ -436,6 +461,39 @@ body {
   transform: none;
 }
 
+/* Delete Mode Styles */
+#deleteModeBtn.active {
+  background-color: #e74c3c;
+  border-color: #c0392b;
+}
+
+#deleteModeBtn.active:hover {
+    background-color: #c0392b;
+}
+
+/* When delete mode is active, change cursor on schedule cells that have content */
+body.delete-mode .class-block {
+    cursor: pointer;
+    position: relative;
+}
+
+/* Visual cue for delete mode selection, excluding locked items */
+body.delete-mode .class-block:not(.locked):hover {
+    background: #e74c3c !important; 
+    opacity: 0.9;
+}
+
+body.delete-mode .class-block:not(.locked):hover::after {
+    content: "×";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.5rem;
+    color: white;
+    font-weight: bold;
+}
+
 .control-button:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
@@ -463,6 +521,82 @@ body {
   background-color: #2980b9;
 }
 
+/* Lock Mode Styles */
+#lockModeBtn.active {
+  background-color: #f1c40f;
+  border-color: #f39c12;
+}
+
+#lockModeBtn.active:hover {
+    background-color: #f39c12;
+}
+
+/* Locked Block Styling */
+.class-block.locked {
+    border: 2px solid #f1c40f !important;
+    position: relative;
+}
+
+.class-block.locked::after {
+    content: "🔒";
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    font-size: 1rem;
+    z-index: 10;
+    text-shadow: 0 0 2px rgba(0,0,0,0.5);
+}
+
+/* Lock Mode Cursor */
+body.lock-mode .class-block {
+    cursor: alias; /* Or another cursor indicating "lockable" */
+}
+
+body.lock-mode .class-block:hover {
+    opacity: 0.9;
+}
+
+/* Locked items shouldn't show delete hover effect */
+body.delete-mode .class-block.locked {
+    cursor: not-allowed;
+    opacity: 1 !important; /* Prevent dimming */
+}
+
+body.delete-mode .class-block.locked:hover {
+    background: linear-gradient(135deg, #3498db, #2980b9) !important; /* Reset to original or keep current color */
+    /* Best to just reset the background override from delete mode */
+}
+
+/* Fix delete mode hover specific to locked items to override opacity/content */
+body.delete-mode .class-block.locked:hover::after {
+    content: "🔒"; /* Keep lock icon instead of X */
+    font-size: 1rem;
+    top: 5px;
+    left: auto;
+    right: 5px;
+    transform: none;
+}
+
+/* Ensure original color is kept or rely on inline style. 
+   Delete mode uses !important on background. We need to override that for locked items.
+*/
+body.delete-mode .class-block.locked:hover {
+    /* We can't easily know the original color here unless we use a var or !important.
+       Inline styles on element usually have high specificity, but !important in CSS overrides it.
+       We will handle this better by ensuring the delete mode selector doesn't target .locked,
+       or by making this one more specific.
+    */
+    background: inherit !important; /* Attempt to inherit, though difficult with gradients */
+}
+/* Better approach: Use a specific class for delete-hover that checks for :not(.locked) in the delete mode selector 
+   But I previously wrote: body.delete-mode .class-block:hover
+   I will update that selector in a moment to exclude locked items, 
+   or just override here with specific "don't touch" styles.
+*/
+
+/* Resetting delete mode effects for locked items */
+
+
 .restore-btn {
   background-color: #3498db;
   color: white;
@@ -479,6 +613,80 @@ body {
 
 .toggle-tp:hover {
   background-color: #2980b9;
+}
+
+.copy-btn {
+  background-color: #3498db;
+  color: white;
+  height: 44px;
+  padding: 0 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.copy-btn:hover {
+  background-color: #2980b9;
+}
+
+.csv-btn {
+  background-color: #3498db;
+  color: white;
+  height: 44px;
+  padding: 0 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.csv-btn:hover:not(:disabled) {
+  background-color: #2980b9;
+}
+
+.csv-btn:disabled, .copy-btn:disabled {
+  background-color: #95a5a6;
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* Toast Notification */
+.toast {
+  visibility: hidden;
+  min-width: 250px;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 8px;
+  padding: 16px;
+  position: fixed;
+  z-index: 1000;
+  left: 50%;
+  bottom: 30px;
+  transform: translateX(-50%);
+  font-size: 1rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  opacity: 0;
+  transition: opacity 0.3s, bottom 0.3s;
+}
+
+.toast.show {
+  visibility: visible;
+  opacity: 1;
+  bottom: 50px;
+  animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+@keyframes fadein {
+  from {bottom: 30px; opacity: 0;}
+  to {bottom: 50px; opacity: 1;}
+}
+
+@keyframes fadeout {
+  from {bottom: 50px; opacity: 1;}
+  to {bottom: 30px; opacity: 0;}
 }
 
 /* Mobile-specific styles */

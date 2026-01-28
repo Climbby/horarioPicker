@@ -1,4 +1,4 @@
-let scheduleData;
+﻿let scheduleData;
 
 // UPDATED: Fixed classes array is now empty
 const fixedClasses = [];
@@ -41,6 +41,7 @@ function transformData(rawData) {
 
   rawData.forEach((course) => {
     const disciplineName = course.class_name;
+    disciplineIds[disciplineName] = course.class_id;
     newData[disciplineName] = {};
 
     course.shifts.forEach((shift) => {
@@ -89,6 +90,7 @@ const timeSlots = [
   "18:00-20:00",
 ];
 const selectedClasses = {};
+const disciplineIds = {};
 const disciplineColors = {};
 const orderedColors = [
   "#2980b9", // Dark Blue
@@ -105,16 +107,25 @@ const defaultColors = [
 let showVagas = false;
 let showTurma = true;
 let showAcronym = true;
+let showRoom = false;
+
+let isDeleteMode = false;
+let isLockMode = false;
+const lockedClasses = {}; // { discipline: [turma1, turma2...] }
 
 // History Management
 const undoStack = [];
 const redoStack = [];
 const MAX_STACK_SIZE = 50;
 
+
+
+// Update saveState to include lockedClasses
 function saveState() {
   const currentState = {
     selectedClasses: JSON.parse(JSON.stringify(selectedClasses)),
-    disciplineColors: JSON.parse(JSON.stringify(disciplineColors))
+    disciplineColors: JSON.parse(JSON.stringify(disciplineColors)),
+    lockedClasses: JSON.parse(JSON.stringify(lockedClasses))
   };
   
   undoStack.push(currentState);
@@ -133,12 +144,49 @@ function undo() {
   
   const currentState = {
     selectedClasses: JSON.parse(JSON.stringify(selectedClasses)),
-    disciplineColors: JSON.parse(JSON.stringify(disciplineColors))
+    disciplineColors: JSON.parse(JSON.stringify(disciplineColors)),
+    lockedClasses: JSON.parse(JSON.stringify(lockedClasses))
   };
   redoStack.push(currentState);
   
   const prevState = undoStack.pop();
   applyState(prevState);
+}
+
+function redo() {
+  if (redoStack.length === 0) return;
+  
+  const currentState = {
+    selectedClasses: JSON.parse(JSON.stringify(selectedClasses)),
+    disciplineColors: JSON.parse(JSON.stringify(disciplineColors)),
+    lockedClasses: JSON.parse(JSON.stringify(lockedClasses))
+  };
+  undoStack.push(currentState);
+  
+  const nextState = redoStack.pop();
+  applyState(nextState);
+}
+
+function applyState(state) {
+  // Clear selectedClasses
+  for (const key in selectedClasses) delete selectedClasses[key];
+  Object.assign(selectedClasses, state.selectedClasses);
+  
+  // Clear disciplineColors
+  for (const key in disciplineColors) delete disciplineColors[key];
+  Object.assign(disciplineColors, state.disciplineColors);
+
+  // Clear lockedClasses
+  for (const key in lockedClasses) delete lockedClasses[key];
+  if (state.lockedClasses) {
+      Object.assign(lockedClasses, state.lockedClasses);
+  }
+  
+  updateUndoRedoButtons();
+  
+  // Refresh UI
+  createDisciplineSelectors(); 
+  updateSchedule();
 }
 
 function redo() {
@@ -249,6 +297,28 @@ async function initializePage() {
   if (toggleTurmaBtn) {
       toggleTurmaBtn.checked = showTurma;
   }
+
+  const toggleRoomBtn = document.getElementById("toggleRoomBtn");
+  if (toggleRoomBtn) {
+      toggleRoomBtn.checked = showRoom;
+      toggleRoomBtn.addEventListener("change", (e) => {
+        showRoom = e.target.checked;
+        updateSchedule();
+      });
+
+  }
+
+  const deleteModeBtn = document.getElementById("deleteModeBtn");
+  if (deleteModeBtn) deleteModeBtn.addEventListener("click", toggleDeleteMode);
+
+  const lockModeBtn = document.getElementById("lockModeBtn");
+  if (lockModeBtn) lockModeBtn.addEventListener("click", toggleLockMode);
+
+  const copyScheduleBtn = document.getElementById("copyScheduleBtn");
+  if (copyScheduleBtn) copyScheduleBtn.addEventListener("click", copyScheduleToClipboard);
+
+  const csvBtn = document.getElementById("csvBtn");
+  if (csvBtn) csvBtn.addEventListener("click", downloadCSV);
 
   updateUndoRedoButtons();
 
@@ -409,8 +479,17 @@ function createDisciplineSelectors() {
       removeButton.className = "remove-turma";
       removeButton.textContent = "×";
       removeButton.title = `Remover ${turma.toUpperCase()}`;
+      
+      // Only show remove button if NOT locked
+      if (lockedClasses[discipline] && lockedClasses[discipline].includes(turma)) {
+          removeButton.style.display = "none";
+      }
+
       removeButton.addEventListener("click", (e) => {
         e.stopPropagation(); // Prevent triggering the turma button click
+        // Extra safety check
+        if (lockedClasses[discipline] && lockedClasses[discipline].includes(turma)) return;
+
         saveState();
         // Remove the turma from the DOM
         turmaContainer.remove();
@@ -439,6 +518,14 @@ function createDisciplineSelectors() {
 
         // Toggle selection
         if (selectedClasses[discipline].includes(turma)) {
+          // Check if locked
+          if (lockedClasses[discipline] && lockedClasses[discipline].includes(turma)) {
+                 // Prevent deselection if locked
+                 button.style.animation = "shake 0.5s";
+                 setTimeout(() => button.style.animation = "", 500);
+                 return;
+           }
+
           selectedClasses[discipline] = selectedClasses[discipline].filter(
             (t) => t !== turma,
           );
@@ -546,31 +633,55 @@ function updateSchedule() {
             // Determine what to show for course name (Acronym vs Full Name)
             const displayName = showAcronym ? acronym : discipline;
 
+            // --- NEW LAYOUT STRUCTURE ---
+            // Top: Name/Sigla
+            // Bottom: Room (Left), Turma (Right)
+            
+            // 1. Top Container (Name)
+            const topDiv = document.createElement("div");
+            topDiv.className = "class-info-top";
+            
+            const nameSpan = document.createElement("span");
+            nameSpan.className = "discipline-name";
+            nameSpan.textContent = displayName;
+            topDiv.appendChild(nameSpan);
+
+            // 2. Bottom Container (Room + Turma)
+            const bottomDiv = document.createElement("div");
+            bottomDiv.className = "class-info-bottom";
+
+            // Room (Left)
+            if (showRoom && classInfo.room) {
+                const roomSpan = document.createElement("span");
+                roomSpan.className = "class-room";
+                roomSpan.textContent = classInfo.room;
+                bottomDiv.appendChild(roomSpan);
+            } else {
+                 // Push turma to right even if room is missing? 
+                 // If we want Turma ALWAYS on right, we can leave this empty or use auto margins.
+                 // Flex verify: justify-content: space-between will handle it if there's only one item, 
+                 // it might put it on left unless we handle it. 
+                 // Let's add a spacer if room is missing but we want structure? 
+                 // simpler: just append room if exists. CSS 'justify-content: space-between'
+                 // If only Turma exists, it will be on left. 
+                 // Use marginLeft: auto for Turma to force it right?
+            }
+
+            // Turma (Right)
             if (showTurma) {
-                // Use a container for flex control if needed, but class-block is already flex.
-                // We want: [Name (truncated)] [ - Turma]
-                
-                const nameSpan = document.createElement("span");
-                nameSpan.className = "discipline-name";
-                nameSpan.textContent = displayName;
-                
-                const separatorSpan = document.createElement("span");
-                separatorSpan.className = "separator-text";
-                separatorSpan.textContent = " - ";
-                
                 const turmaSpan = document.createElement("span");
                 turmaSpan.className = "turma-name";
                 turmaSpan.textContent = turma.toUpperCase();
-
-                classBlock.appendChild(nameSpan);
-                classBlock.appendChild(separatorSpan);
-                classBlock.appendChild(turmaSpan);
-            } else {
-                const nameSpan = document.createElement("span");
-                nameSpan.className = "discipline-name";
-                nameSpan.textContent = displayName;
-                classBlock.appendChild(nameSpan);
+                // If room is missing, we still want this on the right? 
+                // "turma on the bottom right".
+                // We'll handle via CSS 'margin-left: auto' if needed or just space-between.
+                // Best way for "bottom right" regardless of room: 
+                // make sure room is first child, turma is last. 
+                bottomDiv.appendChild(turmaSpan);
             }
+            
+            classBlock.appendChild(topDiv);
+            classBlock.appendChild(bottomDiv);
 
             // Add Room to Tooltip
             const roomInfo = classInfo.room ? `\nSala: ${classInfo.room}` : "";
@@ -580,6 +691,47 @@ function updateSchedule() {
             if (occupiedSlots[cellId]) {
               hasConflicts = true;
             }
+
+            // ADDED: Delete Mode Logic AND Lock Mode Logic
+            classBlock.dataset.discipline = discipline;
+            classBlock.dataset.turma = turma;
+            
+            // Check if locked
+            if (lockedClasses[discipline] && lockedClasses[discipline].includes(turma)) {
+                classBlock.classList.add("locked");
+                classBlock.title += " (BLOQUEADO)";
+            }
+
+            classBlock.addEventListener("click", (e) => {
+                if (isLockMode) {
+                    // Toggle Lock
+                    e.stopPropagation();
+                    saveState();
+                    toggleLockClass(discipline, turma);
+                    createDisciplineSelectors(); // Refresh UI to update lock icons/buttons in the list
+                    updateSchedule();
+                } else if (isDeleteMode) {
+                    e.stopPropagation();
+                    
+                    // Check if locked
+                    if (lockedClasses[discipline] && lockedClasses[discipline].includes(turma)) {
+                        // Locked! Shake or just ignore
+                        classBlock.style.animation = "shake 0.5s";
+                        setTimeout(() => classBlock.style.animation = "", 500);
+                        return;
+                    }
+
+                    saveState();
+                    if (selectedClasses[discipline]) {
+                        selectedClasses[discipline] = selectedClasses[discipline].filter(t => t !== turma);
+                        if (selectedClasses[discipline].length === 0) {
+                            delete selectedClasses[discipline];
+                        }
+                    }
+                    createDisciplineSelectors();
+                    updateSchedule();
+                }
+            });
 
             cell.appendChild(classBlock);
             occupiedSlots[cellId] = true;
@@ -592,23 +744,61 @@ function updateSchedule() {
   updateConflictStatus(hasConflicts);
 }
 
+function toggleDeleteMode() {
+  if (isLockMode) toggleLockMode(); // Disable lock mode if enabling delete mode logic (optional, but good UX to have one active)
+  isDeleteMode = !isDeleteMode;
+  const btn = document.getElementById("deleteModeBtn");
+  if (btn) btn.classList.toggle("active", isDeleteMode);
+  document.body.classList.toggle("delete-mode", isDeleteMode);
+}
+
+function toggleLockMode() {
+  if (isDeleteMode) toggleDeleteMode();
+  isLockMode = !isLockMode;
+  const btn = document.getElementById("lockModeBtn");
+  if (btn) btn.classList.toggle("active", isLockMode);
+  document.body.classList.toggle("lock-mode", isLockMode);
+}
+
+function toggleLockClass(discipline, turma) {
+    if (!lockedClasses[discipline]) {
+        lockedClasses[discipline] = [];
+    }
+    
+    const index = lockedClasses[discipline].indexOf(turma);
+    if (index === -1) {
+        lockedClasses[discipline].push(turma);
+    } else {
+        lockedClasses[discipline].splice(index, 1);
+        if (lockedClasses[discipline].length === 0) {
+            delete lockedClasses[discipline];
+        }
+    }
+}
+
 function updateConflictStatus(hasConflicts) {
   const statusDiv = document.getElementById("conflictStatus");
+  const csvBtn = document.getElementById("csvBtn");
   if (!statusDiv) return;
 
+  const noClassesSelected = Object.keys(selectedClasses).length === 0;
+
   // If no classes selected, show neutral message
-  if (Object.keys(selectedClasses).length === 0) {
+  if (noClassesSelected) {
     statusDiv.innerHTML =
       '<div class="no-conflicts" style="background-color: #95a5a6;">Selecione suas turmas</div>';
+    if (csvBtn) csvBtn.disabled = true;
     return;
   }
 
   if (hasConflicts) {
     statusDiv.innerHTML =
       '<div class="conflicts-warning">⚠️ Atenção: Existem conflitos de horários!</div>';
+    if (csvBtn) csvBtn.disabled = true;
   } else {
     statusDiv.innerHTML =
       '<div class="no-conflicts">✅ Sem conflitos de horários!</div>';
+    if (csvBtn) csvBtn.disabled = false;
   }
 }
 
@@ -662,7 +852,13 @@ function selectAllTurmas() {
 
 function clearAllTurmas() {
   for (const discipline in selectedClasses) {
-    delete selectedClasses[discipline];
+     if (lockedClasses[discipline]) {
+          // Keep locked classes
+          selectedClasses[discipline] = selectedClasses[discipline].filter(t => lockedClasses[discipline].includes(t));
+          if (selectedClasses[discipline].length === 0) delete selectedClasses[discipline];
+      } else {
+        delete selectedClasses[discipline];
+      }
   }
 
   // Update all UI components including individual discipline toggles
@@ -684,8 +880,16 @@ function toggleDiscipline(discipline, shouldSelectAll) {
   const allTurmas = Object.keys(scheduleData[discipline]);
 
   if (!shouldSelectAll) {
-    // Deselect all
-    delete selectedClasses[discipline];
+    // Deselect all but locked
+    if (lockedClasses[discipline]) {
+       // Keep locked classes
+       if (selectedClasses[discipline]) {
+           selectedClasses[discipline] = selectedClasses[discipline].filter(t => lockedClasses[discipline].includes(t));
+           if (selectedClasses[discipline].length === 0) delete selectedClasses[discipline];
+       }
+    } else {
+        delete selectedClasses[discipline];
+    }
   } else {
     // Select all
     selectedClasses[discipline] = [...allTurmas];
@@ -724,6 +928,11 @@ function toggleTPs() {
   if (allSelected) {
     // Deselect all TPs
     allTPs.forEach(({ discipline, turma }) => {
+      // Skip locked classes
+      if (lockedClasses[discipline] && lockedClasses[discipline].includes(turma)) {
+          return;
+      }
+
       if (selectedClasses[discipline]) {
         selectedClasses[discipline] = selectedClasses[discipline].filter(
           (t) => t !== turma,
@@ -753,6 +962,132 @@ function toggleTPs() {
   updateSchedule();
 }
 
+function copyScheduleToClipboard() {
+    const scheduleElement = document.getElementById("scheduleGrid");
+    const copyBtn = document.getElementById("copyScheduleBtn");
+    
+    if (!scheduleElement) return;
+
+    // Visual feedback that something is happening
+    const originalContent = copyBtn.innerHTML;
+    // Spinner or just disable
+    copyBtn.disabled = true;
+    copyBtn.style.cursor = "wait";
+
+    html2canvas(scheduleElement, {
+        scale: 2, // Improve quality
+        backgroundColor: "#ffffff", // Ensure white background
+        logging: false,
+        useCORS: true 
+    }).then(canvas => {
+        canvas.toBlob(blob => {
+            if (blob) {
+                navigator.clipboard.write([
+                    new ClipboardItem({ 'image/png': blob })
+                ]).then(() => {
+                    // Success feedback
+                    showToast("Imagem copiada para a área de transferência!");
+                    
+                    // Change icon to checkmark temporarily
+                    copyBtn.className = "control-button copy-btn success"; // Add success class if we want extra styling
+                    copyBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+                    copyBtn.style.backgroundColor = "#27ae60"; // Green for success
+                    
+                    setTimeout(() => {
+                        copyBtn.innerHTML = originalContent;
+                        copyBtn.disabled = false;
+                        copyBtn.style.cursor = "pointer";
+                        copyBtn.style.backgroundColor = ""; // Reset inline style to use CSS class
+                    }, 2000);
+                }).catch(err => {
+                    console.error('Failed to copy: ', err);
+                    showToast("Erro ao copiar imagem.");
+                    copyBtn.disabled = false;
+                    copyBtn.style.cursor = "pointer";
+                });
+            }
+        });
+    }).catch(err => {
+        console.error("Error generating image:", err);
+        showToast("Erro ao gerar imagem.");
+        copyBtn.disabled = false;
+        copyBtn.style.cursor = "pointer";
+    });
+}
+
+function showToast(message) {
+  const toast = document.getElementById("toast");
+  if (!toast) return;
+  
+  toast.innerText = message;
+  toast.className = "toast show";
+  
+  setTimeout(function(){ 
+      toast.className = toast.className.replace("show", ""); 
+  }, 3000);
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
   await initializePage();
 });
+
+
+function downloadCSV() {
+  if (Object.keys(selectedClasses).length === 0) {
+    alert("Nenhuma turma selecionada para exportar!");
+    return;
+  }
+
+  // Header matching table.csv
+  const headers = ["CLASS", "PL", "TP", "T", "T/TP"];
+  let csvContent = headers.join(",") + "\n";
+
+  Object.keys(selectedClasses).forEach((discipline) => {
+    const classId = disciplineIds[discipline];
+    if (!classId) return; 
+
+    // Initialize columns
+    const columns = {
+        "PL": [],
+        "TP": [],
+        "T": [],
+        "T/TP": [] 
+    };
+
+    const turmas = selectedClasses[discipline];
+    
+    turmas.forEach(turma => {
+        const match = turma.match(/^([A-Z]+)(\d+)$/); 
+        if (match) {
+            const type = match[1]; 
+            const number = match[2];
+            
+            if (columns[type]) {
+                columns[type].push(number);
+            } else if (type === "OT") { 
+                 columns["T/TP"].push(number);
+            }
+        }
+    });
+
+    const row = [
+        classId,
+        columns["PL"].join(" "), 
+        columns["TP"].join(" "),
+        columns["T"].join(" "),
+        columns["T/TP"].join(" ")
+    ];
+    
+    csvContent += row.join(",") + "\n";
+  });
+
+  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.setAttribute("href", url);
+  link.setAttribute("download", "horario_selecionado.csv");
+  link.style.visibility = "hidden";
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
