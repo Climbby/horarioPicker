@@ -644,15 +644,89 @@ body.delete-mode .class-block.locked:hover {
   background-color: #2980b9;
 }
 
+
 .csv-btn:disabled, .copy-btn:disabled {
-  background-color: #95a5a6;
-  opacity: 0.6;
+  /* background-color: #95a5a6; */ /* Removed to match undo/redo */
+  /* opacity: 0.6; */ /* Removed to match undo/redo */
   cursor: not-allowed;
   transform: none !important;
   box-shadow: none !important;
 }
 
-/* Toast Notification */
+/* Saves Section */
+.saves-container {
+  background: white;
+  border-radius: 15px;
+  padding: 25px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  margin-top: 30px;
+}
+
+.saves-title {
+  font-size: 1.8rem;
+  color: #2c3e50;
+  margin-bottom: 20px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.saves-wrapper {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.saves-wrapper .slot-group {
+    background: #f1f2f6;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #dfe4ea;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+}
+
+.saves-wrapper .slot-group:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  border-color: #ced6e0;
+}
+
+.saves-wrapper .load-btn {
+  font-size: 1.1rem;
+  border-right: 1px solid #dfe4ea;
+  min-width: 120px; /* Specific width for better look */
+  text-align: left;
+  padding: 10px 15px;
+}
+
+.saves-wrapper .save-btn {
+  font-size: 1.2rem;
+  padding: 10px 15px;
+}
+
+.saves-wrapper .delete-btn {
+  font-size: 1.2rem;
+  padding: 10px 15px;
+  border-left: 1px solid #dfe4ea;
+  color: #e74c3c;
+  opacity: 0.7;
+}
+
+.saves-wrapper .delete-btn:hover {
+    background-color: #ffeaa7; /* Warning yellow */
+    opacity: 1;
+}
+
+/* Reuse has-data and empty classes from before */
+.slot-group.has-data {
+  border-color: #2ecc71;
+  background: #eafef1;
+}
+
+.slot-group.empty .load-btn {
+  color: #a4b0be;
+}
 .toast {
   visibility: hidden;
   min-width: 250px;

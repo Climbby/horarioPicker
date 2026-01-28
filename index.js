@@ -320,10 +320,144 @@ async function initializePage() {
   const csvBtn = document.getElementById("csvBtn");
   if (csvBtn) csvBtn.addEventListener("click", downloadCSV);
 
+  // Initialize slots
+  updateSaveSlotsUI();
+  
+  // Attach Slot Listeners (delegated or direct)
+  document.querySelectorAll(".save-btn").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+        const slot = e.target.parentElement.dataset.slot;
+        saveSlot(slot);
+        // Optional: Close modal after save? Or keep open for verification?
+        // Let's keep it open but show feedback.
+    });
+  });
+
+
+  document.querySelectorAll(".load-btn").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+        const slot = e.target.parentElement.dataset.slot;
+        loadSlot(slot);
+    });
+  });
+
+  document.querySelectorAll(".delete-btn").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+          const slot = e.target.parentElement.dataset.slot;
+          if (confirm(`Tem certeza que deseja apagar o Slot ${slot}?`)) {
+              deleteSlot(slot);
+          }
+      });
+  });
+
   updateUndoRedoButtons();
 
   // Initialize schedule (now empty initially since no fixed classes)
   updateSchedule();
+}
+
+// --- SAVE / LOAD LOGIC ---
+
+function saveSlot(slotIndex) {
+    const dataToSave = {
+        selectedClasses: selectedClasses,
+        disciplineColors: disciplineColors,
+        lockedClasses: lockedClasses,
+        timestamp: new Date().getTime()
+    };
+    
+    try {
+        localStorage.setItem(`schedule_slot_${slotIndex}`, JSON.stringify(dataToSave));
+        updateSaveSlotsUI();
+        
+        // Visual Feedback
+        const slotGroup = document.querySelector(`.slot-group[data-slot="${slotIndex}"]`);
+        if (slotGroup) {
+            slotGroup.classList.add("saved-animation");
+            setTimeout(() => slotGroup.classList.remove("saved-animation"), 500);
+        }
+    } catch (e) {
+        console.error("Failed to save to localStorage", e);
+        alert("Erro ao salvar! O armazenamento local pode estar cheio ou desabilitado.");
+    }
+}
+
+function loadSlot(slotIndex) {
+    const savedData = localStorage.getItem(`schedule_slot_${slotIndex}`);
+    
+    // Save current state to undo stack before changing anything
+    saveState();
+
+    if (!savedData) {
+        // If empty, clear the board
+        if (Object.keys(selectedClasses).length > 0 && confirm(`O Slot ${slotIndex} está vazio. Deseja limpar o quadro atual?`)) {
+             // Clear all data
+             for (const key in selectedClasses) delete selectedClasses[key];
+             for (const key in disciplineColors) delete disciplineColors[key];
+             for (const key in lockedClasses) delete lockedClasses[key];
+             
+             // Reset UI
+             createDisciplineSelectors();
+             updateSchedule();
+             
+             // Update Undo/Redo since we modified state
+             updateUndoRedoButtons();
+        } else if (Object.keys(selectedClasses).length === 0) {
+             // Already empty, just visual feedback maybe?
+             // alert("O quadro já está vazio."); 
+        }
+        return;
+    }
+    
+    try {
+        const state = JSON.parse(savedData);
+        applyState(state); 
+    } catch (e) {
+        console.error("Failed to load slot", e);
+        alert("Erro ao carregar o slot. Dados corrompidos.");
+    }
+}
+
+function deleteSlot(slotIndex) {
+    localStorage.removeItem(`schedule_slot_${slotIndex}`);
+    updateSaveSlotsUI();
+}
+
+function updateSaveSlotsUI() {
+    for (let i = 1; i <= 5; i++) {
+        const savedData = localStorage.getItem(`schedule_slot_${i}`);
+        const slotGroup = document.querySelector(`.slot-group[data-slot="${i}"]`);
+        
+        if (slotGroup) {
+            const loadBtn = slotGroup.querySelector(".load-btn");
+            const deleteBtn = slotGroup.querySelector(".delete-btn");
+
+            if (savedData) {
+                slotGroup.classList.add("has-data");
+                slotGroup.classList.remove("empty");
+                if (deleteBtn) deleteBtn.disabled = false;
+                
+                // Format timestamp
+                try {
+                    const parsed = JSON.parse(savedData);
+                    const date = new Date(parsed.timestamp);
+                    const dateStr = date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                    loadBtn.title = `Carregar Slot ${i}\nSalvo em: ${dateStr}`;
+                    loadBtn.textContent = `Slot ${i} (${dateStr})`;
+                } catch(e) {
+                     loadBtn.title = "Carregar Slot " + i;
+                     loadBtn.textContent = `Slot ${i}`;
+                }
+            } else {
+                slotGroup.classList.add("empty");
+                slotGroup.classList.remove("has-data");
+                if (deleteBtn) deleteBtn.disabled = true; // Disable delete if empty
+                
+                loadBtn.title = "Clique para limpar o quadro";
+                loadBtn.textContent = `Slot ${i} (Vazio)`;
+            }
+        }
+    }
 }
 
 function createDisciplineSelectors() {
